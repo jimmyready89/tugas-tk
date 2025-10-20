@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('news', function (Blueprint $table) {
-            $table->id('news_id'); // auto increment primary key
+            $table->id('news_id');
             $table->string('news_tag')->unique();
             $table->string('title');
             $table->text('body');

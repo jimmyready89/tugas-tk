@@ -9,7 +9,6 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
-    <!-- Back Button -->
     <div class="mb-6">
         <a href="{{ route('news.show', $news->news_id) }}" class="inline-flex items-center text-blue-500 hover:text-blue-700">
             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -19,13 +18,11 @@
         </a>
     </div>
 
-    <!-- Edit Form -->
     <div class="bg-white rounded-lg shadow-lg p-8">
         <form action="{{ route('news.update', $news->news_id) }}" method="POST" class="space-y-6">
             @csrf
             @method('PUT')
             
-            <!-- News Tag -->
             <div>
                 <label for="news_tag" class="block text-sm font-medium text-gray-700 mb-2">
                     Tag Berita <span class="text-red-500">*</span>
@@ -41,7 +38,6 @@
                 @enderror
             </div>
 
-            <!-- Title -->
             <div>
                 <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
                     Judul Berita <span class="text-red-500">*</span>
@@ -56,7 +52,6 @@
                 @enderror
             </div>
 
-            <!-- Body -->
             <div>
                 <label for="body" class="block text-sm font-medium text-gray-700 mb-2">
                     Isi Berita <span class="text-red-500">*</span>
@@ -71,7 +66,6 @@
                 @enderror
             </div>
 
-            <!-- Author NIP (Read-only) -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                     Penulis
@@ -82,7 +76,6 @@
                 <p class="mt-1 text-sm text-gray-500">Penulis tidak dapat diubah</p>
             </div>
 
-            <!-- Creation Info -->
             <div class="bg-gray-50 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-gray-700 mb-2">Informasi Berita</h4>
                 <div class="text-sm text-gray-600 space-y-1">
@@ -93,7 +86,6 @@
                 </div>
             </div>
 
-            <!-- Form Actions -->
             <div class="flex items-center justify-between pt-6 border-t border-gray-200">
                 <div class="text-sm text-gray-500">
                     <span class="text-red-500">*</span> Field wajib diisi
@@ -113,7 +105,6 @@
         </form>
     </div>
 
-    <!-- Edit History (if needed) -->
     <div class="mt-8 bg-yellow-50 rounded-lg p-6">
         <h3 class="text-lg font-semibold text-yellow-900 mb-4">Catatan Pengeditan</h3>
         <ul class="space-y-2 text-sm text-yellow-800">
@@ -140,57 +131,52 @@
 </div>
 
 @push('scripts')
-<script>
-// Character counter for body
-const bodyTextarea = document.getElementById('body');
-const maxLength = 5000;
+    <script>
+        const bodyTextarea = document.getElementById('body');
+        const maxLength = 5000;
 
-function updateCharacterCounter() {
-    const currentLength = bodyTextarea.value.length;
-    const remaining = maxLength - currentLength;
-    
-    // Create or update character counter
-    let counter = document.getElementById('body-counter');
-    if (!counter) {
-        counter = document.createElement('p');
-        counter.id = 'body-counter';
-        counter.className = 'mt-1 text-sm text-gray-500';
-        bodyTextarea.parentNode.appendChild(counter);
-    }
-    
-    counter.textContent = `${currentLength} karakter`;
-    
-    if (remaining < 100) {
-        counter.className = 'mt-1 text-sm text-red-500';
-    } else {
-        counter.className = 'mt-1 text-sm text-gray-500';
-    }
-}
+        const updateCharacterCounter = () => {
+            const currentLength = bodyTextarea.value.length;
+            const remaining = maxLength - currentLength;
+            
+            let counter = document.getElementById('body-counter');
+            if (!counter) {
+                counter = document.createElement('p');
+                counter.id = 'body-counter';
+                counter.className = 'mt-1 text-sm text-gray-500';
+                bodyTextarea.parentNode.appendChild(counter);
+            }
+            
+            counter.textContent = `${currentLength} karakter`;
+            
+            if (remaining < 100) {
+                counter.className = 'mt-1 text-sm text-red-500';
+            } else {
+                counter.className = 'mt-1 text-sm text-gray-500';
+            }
+        }
 
-// Initialize counter and add event listener
-updateCharacterCounter();
-bodyTextarea.addEventListener('input', updateCharacterCounter);
+        updateCharacterCounter();
+        bodyTextarea.addEventListener('input', updateCharacterCounter);
 
-// Confirm before leaving if form has changes
-let formChanged = false;
-const form = document.querySelector('form');
-const originalData = new FormData(form);
+        let formChanged = false;
+        const form = document.querySelector('form');
+        const originalData = new FormData(form);
 
-form.addEventListener('change', function() {
-    formChanged = true;
-});
+        form.addEventListener('change', () => {
+            formChanged = true;
+        });
 
-window.addEventListener('beforeunload', function(e) {
-    if (formChanged) {
-        e.preventDefault();
-        e.returnValue = '';
-    }
-});
+        window.addEventListener('beforeunload', (e) => {
+            if (formChanged) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
 
-// Don't show warning when submitting
-form.addEventListener('submit', function() {
-    formChanged = false;
-});
-</script>
+        form.addEventListener('submit', () => {
+            formChanged = false;
+        });
+    </script>
 @endpush
 @endsection

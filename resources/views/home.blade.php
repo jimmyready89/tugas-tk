@@ -29,26 +29,6 @@
     </div>
 </div>
 
-<!-- Stats Section -->
-<div class="bg-white py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div class="bg-blue-50 rounded-lg p-6">
-                <div class="text-3xl font-bold text-blue-600 mb-2">{{ $totalNews }}</div>
-                <div class="text-gray-600">Total Berita</div>
-            </div>
-            <div class="bg-green-50 rounded-lg p-6">
-                <div class="text-3xl font-bold text-green-600 mb-2">{{ $totalComments }}</div>
-                <div class="text-gray-600">Total Komentar</div>
-            </div>
-            <div class="bg-purple-50 rounded-lg p-6">
-                <div class="text-3xl font-bold text-purple-600 mb-2">{{ $totalUsers }}</div>
-                <div class="text-gray-600">Total Pengguna</div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Latest News Section -->
 <div class="bg-gray-50 py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

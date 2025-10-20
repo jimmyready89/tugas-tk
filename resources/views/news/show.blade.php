@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
-    <!-- Back Button -->
     <div class="mb-6">
         <a href="{{ route('news.index') }}" class="inline-flex items-center text-blue-500 hover:text-blue-700">
             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -14,19 +13,14 @@
         </a>
     </div>
 
-    <!-- News Article -->
     <article class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <!-- News Header -->
         <div class="px-6 py-8 border-b border-gray-200">
-            <!-- News Tag -->
             <div class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-4">
                 {{ $news->news_tag }}
             </div>
             
-            <!-- News Title -->
             <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $news->title }}</h1>
             
-            <!-- News Meta -->
             <div class="flex flex-wrap items-center text-sm text-gray-500 gap-4">
                 <div class="flex items-center">
                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -52,7 +46,6 @@
                 @endif
             </div>
 
-            <!-- Action Buttons for Author -->
             @auth
                 @if(auth()->user()->nip === $news->author_nip || auth()->user()->role === 'admin')
                     <div class="flex space-x-3 mt-4">
@@ -69,7 +62,6 @@
             @endauth
         </div>
 
-        <!-- News Content -->
         <div class="px-6 py-8">
             <div class="prose prose-lg max-w-none">
                 {!! nl2br(e($news->body)) !!}
@@ -77,7 +69,6 @@
         </div>
     </article>
 
-    <!-- Comments Section -->
     <div class="mt-8 bg-white rounded-lg shadow-lg">
         <div class="px-6 py-6 border-b border-gray-200">
             <h2 class="text-2xl font-bold text-gray-900">
@@ -85,7 +76,6 @@
             </h2>
         </div>
 
-        <!-- Add Comment Form -->
         @auth
             <div class="px-6 py-6 border-b border-gray-200 bg-gray-50">
                 <form action="{{ route('comments.store') }}" method="POST" class="space-y-4">
@@ -118,13 +108,11 @@
             </div>
         @endauth
 
-        <!-- Comments List -->
         <div class="divide-y divide-gray-200">
             @forelse($comments as $comment)
                 @if($comment->is_visible)
                     <div class="px-6 py-6">
                         <div class="flex items-start space-x-4">
-                            <!-- User Avatar -->
                             <div class="flex-shrink-0">
                                 <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                                     <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
@@ -133,7 +121,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Comment Content -->
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-2">
@@ -144,7 +131,6 @@
                                         @endif
                                     </div>
                                     
-                                    <!-- Comment Actions -->
                                     @auth
                                         @if(auth()->user()->nip === $comment->comment_by || auth()->user()->role === 'admin')
                                             <div class="flex space-x-2">
@@ -184,77 +170,76 @@
 </div>
 
 @push('scripts')
-<script>
-function deleteNews(newsId) {
-    if (confirm('Apakah Anda yakin ingin menghapus berita ini?')) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = `/news/${newsId}`;
-        
-        const methodField = document.createElement('input');
-        methodField.type = 'hidden';
-        methodField.name = '_method';
-        methodField.value = 'DELETE';
-        
-        const tokenField = document.createElement('input');
-        tokenField.type = 'hidden';
-        tokenField.name = '_token';
-        tokenField.value = document.querySelector('meta[name="csrf-token"]').content;
-        
-        form.appendChild(methodField);
-        form.appendChild(tokenField);
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
+    <script>
+        const deleteNews = (newsId) => {
+            if (confirm('Apakah Anda yakin ingin menghapus berita ini?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/news/${newsId}`;
+                
+                const methodField = document.createElement('input');
+                methodField.type = 'hidden';
+                methodField.name = '_method';
+                methodField.value = 'DELETE';
+                
+                const tokenField = document.createElement('input');
+                tokenField.type = 'hidden';
+                tokenField.name = '_token';
+                tokenField.value = document.querySelector('meta[name="csrf-token"]').content;
+                
+                form.appendChild(methodField);
+                form.appendChild(tokenField);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
 
-function hideComment(commentId) {
-    if (confirm('Apakah Anda yakin ingin menghapus komentar ini?')) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = `/comments/${commentId}/hide`;
-        
-        const tokenField = document.createElement('input');
-        tokenField.type = 'hidden';
-        tokenField.name = '_token';
-        tokenField.value = document.querySelector('meta[name="csrf-token"]').content;
-        
-        form.appendChild(tokenField);
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
+        const hideComment = (commentId) => {
+            if (confirm('Apakah Anda yakin ingin menghapus komentar ini?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/comments/${commentId}/hide`;
+                
+                const tokenField = document.createElement('input');
+                tokenField.type = 'hidden';
+                tokenField.name = '_token';
+                tokenField.value = document.querySelector('meta[name="csrf-token"]').content;
+                
+                form.appendChild(tokenField);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
 
-function editComment(commentId) {
-    // Simple edit implementation - can be enhanced with modal
-    const newComment = prompt('Edit komentar:');
-    if (newComment && newComment.trim()) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = `/comments/${commentId}`;
-        
-        const methodField = document.createElement('input');
-        methodField.type = 'hidden';
-        methodField.name = '_method';
-        methodField.value = 'PUT';
-        
-        const tokenField = document.createElement('input');
-        tokenField.type = 'hidden';
-        tokenField.name = '_token';
-        tokenField.value = document.querySelector('meta[name="csrf-token"]').content;
-        
-        const commentField = document.createElement('input');
-        commentField.type = 'hidden';
-        commentField.name = 'comment';
-        commentField.value = newComment;
-        
-        form.appendChild(methodField);
-        form.appendChild(tokenField);
-        form.appendChild(commentField);
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
-</script>
+        const editComment = (commentId) => {
+            const newComment = prompt('Edit komentar:');
+            if (newComment && newComment.trim()) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/comments/${commentId}`;
+                
+                const methodField = document.createElement('input');
+                methodField.type = 'hidden';
+                methodField.name = '_method';
+                methodField.value = 'PUT';
+                
+                const tokenField = document.createElement('input');
+                tokenField.type = 'hidden';
+                tokenField.name = '_token';
+                tokenField.value = document.querySelector('meta[name="csrf-token"]').content;
+                
+                const commentField = document.createElement('input');
+                commentField.type = 'hidden';
+                commentField.name = 'comment';
+                commentField.value = newComment;
+                
+                form.appendChild(methodField);
+                form.appendChild(tokenField);
+                form.appendChild(commentField);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
 @endpush
 @endsection

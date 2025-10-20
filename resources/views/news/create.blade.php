@@ -9,7 +9,6 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
-    <!-- Back Button -->
     <div class="mb-6">
         <a href="{{ route('news.index') }}" class="inline-flex items-center text-blue-500 hover:text-blue-700">
             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -19,12 +18,10 @@
         </a>
     </div>
 
-    <!-- Create Form -->
     <div class="bg-white rounded-lg shadow-lg p-8">
         <form action="{{ route('news.store') }}" method="POST" class="space-y-6">
             @csrf
             
-            <!-- News Tag -->
             <div>
                 <label for="news_tag" class="block text-sm font-medium text-gray-700 mb-2">
                     Tag Berita <span class="text-red-500">*</span>
@@ -40,7 +37,6 @@
                 @enderror
             </div>
 
-            <!-- Title -->
             <div>
                 <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
                     Judul Berita <span class="text-red-500">*</span>
@@ -55,7 +51,6 @@
                 @enderror
             </div>
 
-            <!-- Body -->
             <div>
                 <label for="body" class="block text-sm font-medium text-gray-700 mb-2">
                     Isi Berita <span class="text-red-500">*</span>
@@ -70,10 +65,8 @@
                 @enderror
             </div>
 
-            <!-- Author NIP (Hidden, auto-filled) -->
             <input type="hidden" name="author_nip" value="{{ auth()->user()->nip }}">
 
-            <!-- Form Actions -->
             <div class="flex items-center justify-between pt-6 border-t border-gray-200">
                 <div class="text-sm text-gray-500">
                     <span class="text-red-500">*</span> Field wajib diisi
@@ -93,7 +86,6 @@
         </form>
     </div>
 
-    <!-- Writing Tips -->
     <div class="mt-8 bg-blue-50 rounded-lg p-6">
         <h3 class="text-lg font-semibold text-blue-900 mb-4">Tips Menulis Berita yang Baik</h3>
         <ul class="space-y-2 text-sm text-blue-800">
@@ -132,45 +124,43 @@
 </div>
 
 @push('scripts')
-<script>
-// Auto-generate news tag from title
-document.getElementById('title').addEventListener('input', function() {
-    const title = this.value;
-    const newsTag = title
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, '') // Remove special characters
-        .replace(/\s+/g, '-') // Replace spaces with hyphens
-        .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-        .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
-    
-    document.getElementById('news_tag').value = newsTag;
-});
+    <script>
+        document.getElementById('title').addEventListener('input', () => {
+            const title = this.value;
+            const newsTag = title
+                .toLowerCase()
+                .replace(/[^a-z0-9\s]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+            
+            document.getElementById('news_tag').value = newsTag;
+        });
 
-// Character counter for body
-const bodyTextarea = document.getElementById('body');
-const maxLength = 5000;
+        const bodyTextarea = document.getElementById('body');
+        const maxLength = 5000;
 
-bodyTextarea.addEventListener('input', function() {
-    const currentLength = this.value.length;
-    const remaining = maxLength - currentLength;
-    
-    // Create or update character counter
-    let counter = document.getElementById('body-counter');
-    if (!counter) {
-        counter = document.createElement('p');
-        counter.id = 'body-counter';
-        counter.className = 'mt-1 text-sm text-gray-500';
-        bodyTextarea.parentNode.appendChild(counter);
-    }
-    
-    counter.textContent = `${currentLength} karakter`;
-    
-    if (remaining < 100) {
-        counter.className = 'mt-1 text-sm text-red-500';
-    } else {
-        counter.className = 'mt-1 text-sm text-gray-500';
-    }
-});
-</script>
+        bodyTextarea.addEventListener('input', () => {
+            const currentLength = this.value.length;
+            const remaining = maxLength - currentLength;
+            
+
+            let counter = document.getElementById('body-counter');
+            if (!counter) {
+                counter = document.createElement('p');
+                counter.id = 'body-counter';
+                counter.className = 'mt-1 text-sm text-gray-500';
+                bodyTextarea.parentNode.appendChild(counter);
+            }
+            
+            counter.textContent = `${currentLength} karakter`;
+            
+            if (remaining < 100) {
+                counter.className = 'mt-1 text-sm text-red-500';
+            } else {
+                counter.className = 'mt-1 text-sm text-gray-500';
+            }
+        });
+    </script>
 @endpush
 @endsection

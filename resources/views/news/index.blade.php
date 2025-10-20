@@ -9,7 +9,6 @@
 
 @section('content')
 <div class="space-y-6">
-    <!-- Search and Filter -->
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
@@ -30,11 +29,9 @@
         </div>
     </div>
 
-    <!-- News Grid -->
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         @forelse($news as $article)
             <article class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                <!-- News Image Placeholder -->
                 <div class="h-48 bg-gradient-to-r from-blue-400 to-purple-500 rounded-t-lg flex items-center justify-center">
                     <div class="text-white text-center">
                         <svg class="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
@@ -45,7 +42,6 @@
                 </div>
                 
                 <div class="p-6">
-                    <!-- News Meta -->
                     <div class="flex items-center text-sm text-gray-500 mb-3">
                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
@@ -58,17 +54,14 @@
                         <span>{{ $article->created_at->format('d M Y') }}</span>
                     </div>
                     
-                    <!-- News Title -->
                     <h2 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                         {{ $article->title }}
                     </h2>
                     
-                    <!-- News Excerpt -->
                     <p class="text-gray-600 text-sm mb-4 line-clamp-3">
                         {{ Str::limit(strip_tags($article->body), 150) }}
                     </p>
                     
-                    <!-- Read More Button -->
                     <div class="flex justify-between items-center">
                         <a href="{{ route('news.show', $article->news_id) }}" 
                            class="inline-flex items-center text-blue-500 hover:text-blue-700 font-medium text-sm">
@@ -78,7 +71,6 @@
                             </svg>
                         </a>
                         
-                        <!-- Action Buttons for Author -->
                         @auth
                             @if(auth()->user()->nip === $article->author_nip || auth()->user()->role === 'admin')
                                 <div class="flex space-x-2">
@@ -101,7 +93,6 @@
                 </div>
             </article>
         @empty
-            <!-- No News State -->
             <div class="col-span-full">
                 <div class="text-center py-12">
                     <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="currentColor" viewBox="0 0 20 20">
@@ -120,7 +111,6 @@
         @endforelse
     </div>
 
-    <!-- Pagination -->
     @if(isset($news) && method_exists($news, 'links'))
         <div class="flex justify-center">
             {{ $news->links() }}
@@ -129,30 +119,29 @@
 </div>
 
 @push('scripts')
-<script>
-function deleteNews(newsId) {
-    if (confirm('Apakah Anda yakin ingin menghapus berita ini?')) {
-        // Create a form and submit it
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = `/news/${newsId}`;
-        
-        const methodField = document.createElement('input');
-        methodField.type = 'hidden';
-        methodField.name = '_method';
-        methodField.value = 'DELETE';
-        
-        const tokenField = document.createElement('input');
-        tokenField.type = 'hidden';
-        tokenField.name = '_token';
-        tokenField.value = document.querySelector('meta[name="csrf-token"]').content;
-        
-        form.appendChild(methodField);
-        form.appendChild(tokenField);
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
-</script>
+    <script>
+        const deleteNews = (newsId) => {
+            if (confirm('Apakah Anda yakin ingin menghapus berita ini?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/news/${newsId}`;
+                
+                const methodField = document.createElement('input');
+                methodField.type = 'hidden';
+                methodField.name = '_method';
+                methodField.value = 'DELETE';
+                
+                const tokenField = document.createElement('input');
+                tokenField.type = 'hidden';
+                tokenField.name = '_token';
+                tokenField.value = document.querySelector('meta[name="csrf-token"]').content;
+                
+                form.appendChild(methodField);
+                form.appendChild(tokenField);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
 @endpush
 @endsection
